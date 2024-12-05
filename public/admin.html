@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h2>Interface Administrateur</h2>
+        <button id="logout">Déconnexion</button>
+        <h3>Liste des utilisateurs</h3>
+        <table id="userTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Rôle</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+        <h3>Ajouter un utilisateur</h3>
+        <form id="addUserForm">
+            <label for="newUsername">Nom d'utilisateur :</label>
+            <input type="text" id="newUsername" name="username" required>
+            <label for="newPassword">Mot de passe :</label>
+            <input type="password" id="newPassword" name="password" required>
+            <label for="newRole">Rôle :</label>
+            <select id="newRole" name="role">
+                <option value="user">Utilisateur</option>
+                <option value="admin">Administrateur</option>
+            </select>
+            <button type="submit">Ajouter</button>
+        </form>
+    </div>
+    <script src="js/admin.js"></script>
+</body>
+</html>
