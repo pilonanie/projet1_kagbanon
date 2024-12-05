@@ -1,47 +1,36 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
-    <link rel="stylesheet" href="css/styles.css">
+    <title>Bienvenue - Interface d'administration</title>
+    <link rel="stylesheet" href="/css/style.css"> <!-- Ajoutez votre fichier CSS -->
 </head>
 <body>
-    <div class="container">
-        <h2>Connexion</h2>
-        <form id="loginForm">
-            <label for="username">Nom d'utilisateur :</label>
-            <input type="text" id="username" name="username" required>
-            <label for="password">Mot de passe :</label>
-            <input type="password" id="password" name="password" required>
-            <button type="submit">Se connecter</button>
-        </form>
-        <div id="errorMessage" class="error"></div>
-    </div>
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const username = document.getElementById('username').value;
-            const password = document.getElementById('password').value;
+    <header>
+        <h1>Bienvenue sur l'Interface d'Administration</h1>
+        <nav>
+            <ul>
+                <li><a href="/auth/login">Se connecter</a></li>
+                <li><a href="/auth/register">S'inscrire</a></li> <!-- Option d'inscription si nécessaire -->
+            </ul>
+        </nav>
+    </header>
 
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, password }),
-            });
+    <section>
+        <h2>Qu'est-ce que l'interface d'administration ?</h2>
+        <p>
+            Cette plateforme vous permet de gérer les utilisateurs et leurs informations. 
+            Si vous êtes un administrateur, vous pouvez ajouter, modifier ou supprimer des utilisateurs.
+            Les utilisateurs simples peuvent uniquement consulter et modifier leurs propres informations personnelles.
+        </p>
+    </section>
 
-            if (response.ok) {
-                const data = await response.json();
-                if (data.role === 'admin') {
-                    window.location.href = 'admin.html';
-                } else {
-                    window.location.href = 'userProfile.html';
-                }
-            } else {
-                document.getElementById('errorMessage').textContent = 'Identifiants incorrects';
-            }
-        });
-    </script>
+    <footer>
+        <p>&copy; 2024 Interface d'Administration. Tous droits réservés.</p>
+    </footer>
+
+    <script src="/js/main.js"></script> <!-- Lien vers votre fichier JS si nécessaire -->
 </body>
 </html>
 
