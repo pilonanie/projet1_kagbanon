@@ -1,36 +1,82 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenue - Interface d'administration</title>
-    <link rel="stylesheet" href="/css/style.css"> <!-- Ajoutez votre fichier CSS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestion des Utilisateurs</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <h1>Bienvenue sur l'Interface d'Administration</h1>
-        <nav>
-            <ul>
-                <li><a href="/auth/login">Se connecter</a></li>
-                <li><a href="/auth/register">S'inscrire</a></li> <!-- Option d'inscription si nécessaire -->
-            </ul>
-        </nav>
-    </header>
+  <div class="container">
+    <h1>Gestion des Utilisateurs</h1>
 
-    <section>
-        <h2>Qu'est-ce que l'interface d'administration ?</h2>
-        <p>
-            Cette plateforme vous permet de gérer les utilisateurs et leurs informations. 
-            Si vous êtes un administrateur, vous pouvez ajouter, modifier ou supprimer des utilisateurs.
-            Les utilisateurs simples peuvent uniquement consulter et modifier leurs propres informations personnelles.
-        </p>
-    </section>
+    <div class="admin-section">
+      <h2>Administrateur</h2>
+      <form id="addUserForm">
+        <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+        <input type="password" id="password" placeholder="Mot de passe" required>
+        <select id="role">
+          <option value="user">Utilisateur</option>
+          <option value="admin">Administrateur</option>
+        </select>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="text" id="fullname" placeholder="Nom complet" required>
+        <button type="submit">Ajouter Utilisateur</button>
+      </form>
+    </div>
 
-    <footer>
-        <p>&copy; 2024 Interface d'Administration. Tous droits réservés.</p>
-    </footer>
+    <div class="user-section">
+      <h2>Modifier ses informations</h2>
+      <form id="updateUserForm">
+        <input type="email" id="userEmail" placeholder="Nouveau Email">
+        <input type="text" id="userFullname" placeholder="Nouveau Nom Complet">
+        <button type="submit">Mettre à Jour</button>
+      </form>
+    </div>
+  </div>
+  <script>
+    const addUserForm = document.getElementById('addUserForm');
+    const updateUserForm = document.getElementById('updateUserForm');
 
-    <script src="/js/main.js"></script> <!-- Lien vers votre fichier JS si nécessaire -->
+    // Ajouter un utilisateur (Admin)
+    addUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        role: document.getElementById('role').value,
+        email: document.getElementById('email').value,
+        fullname: document.getElementById('fullname').value,
+      };
+
+      const response = await fetch('/api/admin/add', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    });
+
+    // Modifier ses informations (Utilisateur simple)
+    updateUserForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const updatedInfo = {
+        email: document.getElementById('userEmail').value,
+        fullname: document.getElementById('userFullname').value,
+      };
+
+      const userId = 1; // Exemple : ID utilisateur en session
+      const response = await fetch(`/api/user/edit/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedInfo),
+      });
+
+      const result = await response.json();
+      alert(result.message);
+    });
+  </script>
 </body>
 </html>
-
