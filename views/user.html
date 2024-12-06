@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Utilisateur</title>
+</head>
+<body>
+  <h1>Modifier vos informations</h1>
+  <form id="updateUserForm">
+    <input type="text" id="fullname" placeholder="Nom complet" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <button type="submit">Mettre à jour</button>
+  </form>
+  <script>
+    document.getElementById('updateUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const userId = 1; // Remplacez avec l'ID actuel
+      const user = {
+        fullname: document.getElementById('fullname').value,
+        email: document.getElementById('email').value,
+      };
+      const response = await fetch(`/api/users`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: userId, ...user }),
+      });
+      alert(await response.json().message);
+    });
+  </script>
+</body>
+</html>

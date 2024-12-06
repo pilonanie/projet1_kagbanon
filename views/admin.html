@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+</head>
+<body>
+  <h1>Admin Panel</h1>
+  <form id="addUserForm">
+    <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+    <input type="password" id="password" placeholder="Mot de passe" required>
+    <select id="role">
+      <option value="user">Utilisateur</option>
+      <option value="admin">Administrateur</option>
+    </select>
+    <input type="text" id="fullname" placeholder="Nom complet" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <button type="submit">Ajouter</button>
+  </form>
+  <script>
+    document.getElementById('addUserForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+        role: document.getElementById('role').value,
+        fullname: document.getElementById('fullname').value,
+        email: document.getElementById('email').value,
+      };
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(user),
+      });
+      alert(await response.json().message);
+    });
+  </script>
+</body>
+</html>

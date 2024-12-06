@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="login-container">
+    <h1>Connexion</h1>
+    <form id="loginForm">
+      <input type="text" id="username" placeholder="Nom d'utilisateur" required>
+      <input type="password" id="password" placeholder="Mot de passe" required>
+      <button type="submit">Se connecter</button>
+    </form>
+    <p id="errorMessage" style="color: red; display: none;">Identifiants incorrects</p>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const credentials = {
+        username: document.getElementById('username').value,
+        password: document.getElementById('password').value,
+      };
+      const response = await fetch('/api/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials),
+      });
+      const result = await response.json();
+      if (result.success) {
+        // Redirige vers la bonne interface en fonction du rôle
+        if (result.role === 'admin') {
+          window.location.href = '/admin.html';
+        } else if (result.role === 'user') {
+          window.location.href = '/user.html';
+        }
+      } else {
+        document.getElementById('errorMessage').style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>
