@@ -1,51 +1,41 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const db = require('../db');
-const { authenticateToken } = require('../middlewares/auth');
-
 const router = express.Router();
 
-// Route pour ajouter un utilisateur
-router.post('/', authenticateToken, (req, res) => {
-  const { username, email, password, role } = req.body;
+// Page d'inscription utilisateur
+router.get('/register', (req, res) => res.render('user/register'));
 
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
-
-  db.query(
-    'INSERT INTO users (username, email, password, role) VALUES (?, ?, ?, ?)',
-    [username, email, password, role || 'user'],
-    (err) => {
-      if (err) return res.status(400).json({ error: err.message });
-      res.json({ message: 'User added successfully' });
-    }
-  );
+// Inscription utilisateur
+router.post('/register', async (req, res) => {
+    const { username, password } = req.body;
+    const hashedPassword = await bcrypt.hash(password, 10);
+    db.query('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword], err => {
+        if (err) throw err;
+        res.redirect('/user/login');
+    });
 });
 
-// Route pour modifier un utilisateur
-router.put('/:id', authenticateToken, (req, res) => {
-  const { username, email, password, role } = req.body;
-  const userId = req.params.id;
+// Page de connexion utilisateur
+router.get('/login', (req, res) => res.render('user/login'));
 
-  if (req.user.role !== 'admin' && req.user.id !== parseInt(userId))
-    return res.status(403).json({ message: 'Forbidden' });
-
-  db.query(
-    'UPDATE users SET username = ?, email = ?, password = ?, role = ? WHERE id = ?',
-    [username, email, password, role, userId],
-    (err) => {
-      if (err) return res.status(400).json({ error: err.message });
-      res.json({ message: 'User updated successfully' });
-    }
-  );
+// Connexion utilisateur
+router.post('/login', (req, res) => {
+    const { username, password } = req.body;
+    db.query('SELECT * FROM users WHERE username = ?', [username], async (err, results) => {
+        if (results.length > 0 && await bcrypt.compare(password, results[0].password)) {
+            req.session.user = results[0];
+            res.redirect('/user/profile');
+        } else {
+            res.send('Invalid credentials');
+        }
+    });
 });
 
-// Route pour supprimer un utilisateur
-router.delete('/:id', authenticateToken, (req, res) => {
-  if (req.user.role !== 'admin') return res.status(403).json({ message: 'Forbidden' });
-
-  db.query('DELETE FROM users WHERE id = ?', [req.params.id], (err) => {
-    if (err) return res.status(400).json({ error: err.message });
-    res.json({ message: 'User deleted successfully' });
-  });
+// Page de profil utilisateur
+router.get('/profile', (req, res) => {
+    if (!req.session.user) return res.redirect('/user/login');
+    res.render('user/profile', { user: req.session.user });
 });
 
 module.exports = router;

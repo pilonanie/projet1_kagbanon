@@ -1,23 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
-  <title>User Management</title>
-</head>
-<body>
-  <h1>User Management System</h1>
-  <form id="userForm">
-    <input type="text" id="username" placeholder="Username" required />
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
-    <select id="role">
-      <option value="user">User</option>
-      <option value="admin">Admin</option>
-    </select>
-    <button type="submit">Submit</button>
-  </form>
-  <script src="script.js"></script>
-</body>
-</html>
+const express = require('express');
+const bodyParser = require('body-parser');
+const session = require('express-session');
+const db = require('./db');
+const app = express();
+
+// Middleware
+app.set('view engine', 'ejs');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
+app.use(session({ secret: 'secret', resave: false, saveUninitialized: true }));
+
+// Routes
+const adminRoutes = require('./routes/admin');
+const userRoutes = require('./routes/user');
+app.use('/admin', adminRoutes);
+app.use('/user', userRoutes);
+
+// Page d'accueil
+app.get('/', (req, res) => {
+    res.render('index');
+});
+
+// Serveur
+app.listen(3000, () => {
+    console.log('Server running on http://localhost:3000');
+});
