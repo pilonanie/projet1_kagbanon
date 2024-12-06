@@ -6,16 +6,25 @@ document.getElementById('userForm').addEventListener('submit', async (e) => {
     const password = document.getElementById('password').value;
     const role = document.getElementById('role').value;
   
-    const response = await fetch('/api/users', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ username, email, password, role }),
-    });
+    try {
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ username, email, password, role }),
+      });
   
-    const result = await response.json();
-    const messageDiv = document.getElementById('message');
-    messageDiv.textContent = result.message || result.error;
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert(result.message);
+      } else {
+        alert(`Error: ${result.error}`);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      alert('Something went wrong. Please try again.');
+    }
   });
   
