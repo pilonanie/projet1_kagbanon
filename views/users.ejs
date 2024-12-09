@@ -1,0 +1,54 @@
+<% layout('layout') %>
+<% title = "Gestion Utilisateurs" %>
+
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">Gestion des Utilisateurs</h2>
+  
+  <!-- Section pour afficher les utilisateurs dans un tableau -->
+  <table class="table table-bordered table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">ID</th>
+        <th scope="col">Nom d'utilisateur</th>
+        <th scope="col">Email</th>
+        <th scope="col">Rôle</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% if (users && users.length > 0) { %>
+        <% users.forEach(user => { %>
+          <tr>
+            <td><%= user.id %></td>
+            <td><%= user.username %></td>
+            <td><%= user.email %></td>
+            <td><%= user.role %></td>
+            <td>
+              <!-- Bouton pour modifier l'utilisateur -->
+              <a href="/users/edit/<%= user.id %>" class="btn btn-warning btn-sm">Modifier</a>
+              
+              <!-- Formulaire pour supprimer l'utilisateur -->
+              <form 
+                action="/users/delete/<%= user.id %>" 
+                method="POST" 
+                style="display: inline-block;" 
+                onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');"
+              >
+                <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+              </form>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="5" class="text-center">Aucun utilisateur trouvé.</td>
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+  
+  <!-- Bouton pour ajouter un nouvel utilisateur -->
+  <div class="text-center mt-3">
+    <a href="/users/add" class="btn btn-success">Ajouter un Utilisateur</a>
+  </div>
+</div>

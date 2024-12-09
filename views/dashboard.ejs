@@ -1,0 +1,11 @@
+<% layout('layout') %>
+<% title = "Tableau de Bord" %>
+
+<div class="container text-center">
+  <h2>Bienvenue, <strong><%= username %></strong> !</h2>
+  <p>Accédez aux fonctionnalités de votre profil et gérez vos paramètres ici.</p>
+  <div class="mt-4">
+    <a href="/profile" class="btn btn-secondary">Voir mon profil</a>
+    <a href="/logout" class="btn btn-danger">Déconnexion</a>
+  </div>
+</div>
